@@ -1,25 +1,26 @@
 #include <avr/io.h>
 ; Inclui as definições de I/O do AVR
-
+;.,.,.,.,.,.,.,.,.,.,.,.,.,
 ; Organização da memória - define a origem para 0x0000 (vetor de reset)
 .ORG 0x0000
   RJMP init_ADC           ; Pula para init_ADC no reset
-
+;.,.,.,.,.,.,.,.,.,.,.,.,.,
 .text                     ; Início da seção de código
-
+;.,.,.,.,.,.,.,.,.,.,.,.,.,
 ; Declaração de símbolos globais
 .global init_ADC          ; Torna init_ADC acessível globalmente
 .global read_ADC          ; Torna read_ADC acessível globalmente
-
 ;=-=-=-=-=-=-=-=-=-=-=-=-=-
 ; 1. Registrador ADMUX (ADC Multiplexer Selection Register)
 ; Endereço: 0x7C
 ; Bits: REFS1 | REFS0 | ADLAR | MUX4 | MUX3 | MUX2 | MUX1 | MUX0
+;.,.,.,.,.,.,.,.,.,.,.,.,.,
 ; Sub-rotina de inicialização do ADC
 ;::::::::::::::::::::::::::
 ; 2. Registrador ADCSRA (ADC Control and Status Register A)
 ; Endereço: 0x7A
 ; Bits: ADEN | ADSC | ADATE | ADIF | ADIE | ADPS2 | ADPS1 | ADPS0
+;.,.,.,.,.,.,.,.,.,.,.,.,.,
 init_ADC:
   ;+-+-+-+-+-+-+-+-+-+-+-+-
   
@@ -39,7 +40,7 @@ init_ADC:
   
   LDI r17, 0b10000111     ; Habilita o ADC, define prescaler para CLK/128
   STS ADCSRA, r17         ; Armazena no registrador ADCSRA na SRAM
-  
+  ;"'"'"'"'"'"'"'"'"'"'"'"'
   RET                     ; Retorna da sub-rotina
 
 ;=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -67,5 +68,9 @@ read_ADC:
     LDS r19, ADCH         ; Lê o byte alto do resultado do ADC
     OUT PORTD, r18        ; Envia o byte baixo para a PORTD
     OUT PORTB, r19        ; Envia o byte alto para a PORTB
-    
+    ;......................
+    SUB r17, r17          ; Zeramos o registrador para outros usos. De certa forma isso é opicinal.
+    MOV r18, r17          ;
+    MOV r19, r17          ;
+  ;"'"'"'"'"'"'"'"'"'"'"'"'  
   RET                     ; Retorna da sub-rotina
